@@ -45,9 +45,32 @@ var SubjectListCtrl = function ($scope, $rootScope, $log, $mdMedia, SchemaRegist
    */
   function loadCache() {
     $rootScope.allSchemas = [];
+    $rootScope.allNamespaces =[];
     var promise = SchemaRegistryFactory.refreshLatestSubjectsCACHE();
     promise.then(function (cachedData) {
       $rootScope.allSchemas = cachedData;
+
+
+      // Flinox
+      var allNamespaces = [{ namespace: "" }];
+      angular.forEach($rootScope.allSchemas, function(value, key) {
+
+        var exists = false;
+        angular.forEach(allNamespaces, function(val2, key) {
+          if(angular.equals(value.Schema.namespace, val2.namespace)){ exists = true }; 
+        });
+
+        if(exists == false && value.Schema.namespace != "") { 
+
+          allNamespaces.push({ namespace: value.Schema.namespace }); 
+          
+        }
+
+      });
+      
+      $rootScope.allNamespaces = allNamespaces;
+      // Flinox
+
       addCompatibilityValue();
     }, function (reason) {
       $log.error('Failed at loadCache : ' + reason);

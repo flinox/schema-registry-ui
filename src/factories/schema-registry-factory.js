@@ -512,6 +512,7 @@ var SchemaRegistryFactory = function ($rootScope, $http, $location, $q, $log, Ut
             urlFetchLatestCalls.push($http.get(env.SCHEMA_REGISTRY() + '/subjects/' + subject + '/versions/latest'));
           });
           $q.all(urlFetchLatestCalls).then(function (latestSchemas) {
+            $rootScope.allNamespaces = {}      
             CACHE = []; // Clean up existing cache - to replace with new one
             angular.forEach(latestSchemas, function (result) {
               var data = result.data;
@@ -520,7 +521,8 @@ var SchemaRegistryFactory = function ($rootScope, $http, $location, $q, $log, Ut
                 id: data.id,            // id
                 schema: data.schema,    // schema - in String - schema i.e. {\"type\":\"record\",\"name\":\"User\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"}]}
                 Schema: JSON.parse(data.schema), // js type | name | doc | fields ...
-                subjectName: data.subject
+                subjectName: data.subject,
+                namespace: data.namespace // Flinox
               };
               CACHE.push(cacheData);
             });
@@ -555,7 +557,9 @@ var SchemaRegistryFactory = function ($rootScope, $http, $location, $q, $log, Ut
               id: subjectInformation.id,
               schema: subjectInformation.schema, // this is text
               Schema: JSON.parse(subjectInformation.schema), // this is json
-              subjectName: subjectInformation.subject
+              subjectName: subjectInformation.subject,
+              namespace: subjectInformation.namespace // Flinox
+
             };
             $log.debug("  pipeline: " + subjectName + "/" + subjectVersion + " in [ " + (new Date().getTime() - start) + " ] msec");
             deferred.resolve(subjectInformationWithMetadata);

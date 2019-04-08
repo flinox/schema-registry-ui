@@ -5,18 +5,39 @@
         <span>{{allSchemas.length}} Schemas</span>
       </h3>
       <span flex></span>
+
+<!-- Removido by Flinox
       <a md-ink-ripple ng-show="true" ng-href="#/cluster/{{cluster}}/schema/new"
          class="md-raised md-primary md-button md-ink-ripple blue"
          type="button"
          aria-label="new connector">New</a>
+-->         
     </div>
   </md-toolbar>
   <md-content style="background-color:white;overflow:hidden;">
+      
+
+     <!--
       <input ng-model="search" class="searchSchemas" placeholder="Search schemas">
       <i class="fa fa-search" aria-hidden="true" style="right: 26px;font-size: 16px;position: absolute;top: 20px;color:#ddd"></i>
+      -->
+
+      <!-- Flinox -->
+      <div style="width=100%">
+      <md-input-container style="width=100%" ng-show="schema">
+          <h5>Selecione o namespace:</h5>
+          <md-select ng-model="selected" style="width=100%">
+              <md-option multiple="false" placeholder="Selecione o namespace para visualizar os topicos..." style="width=100%" ng-repeat="x in allNamespaces" value="{{x.namespace}}">{{x.namespace}}</md-option>
+          </md-select>
+          <br>
+      </md-input-container>
+      <br>
+      </div>
+      <!-- Flinox -->
+
     <md-list flex>
       <md-list-item class="md-2-line shemaslistitem"
-                    dir-paginate="schema in allSchemas | orderBy:'-schema.length' | filter : search | itemsPerPage: itemsPerPage"
+                    dir-paginate="schema in allSchemas | orderBy:'-schema.length' | filter : selected | itemsPerPage: itemsPerPage"
                     href="#/cluster/{{cluster}}/schema/{{schema.subjectName}}/version/{{schema.version}}"
                     aria-label="{{schema.subjectName}}"
                     style="border-bottom: 1px solid rgba(0, 0, 0, .1)"
